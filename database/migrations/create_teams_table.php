@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class () extends Migration {
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create(Config::get('teams.tables.teams', 'teams'), static function (Blueprint $table) {
+            match (Config::get('teams.primary_key.type', 'bigint')) {
+                'uuid' => $table->uuid('id')->primary(),
+                'int' => $table->id(),
+                default => $table->id(), // bigint
+            };
+
+            match (Config::get('teams.primary_key.type', 'bigint')) {
+                'uuid' => $table->foreignUuid('user_id')->index(),
+                default => $table->foreignId('user_id')->index(),
+            };
+
+            $table->string('name');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists(Config::get('teams.tables.teams', 'teams'));
+    }
+};

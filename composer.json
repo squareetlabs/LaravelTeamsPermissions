@@ -1,0 +1,90 @@
+{
+    "name": "squareetlabs/laravel-teams-permissions",
+    "description": "A comprehensive Laravel package for advanced team-based permission management in multi-tenant applications. Features RBAC, granular permissions, entity-specific abilities, global groups, audit logging, REST API, and seamless Laravel integration.",
+    "keywords": [
+        "laravel",
+        "teams",
+        "multi-tenant",
+        "rbac",
+        "role-based-access-control",
+        "permissions",
+        "authorization",
+        "access-control",
+        "groups",
+        "abilities",
+        "entity-permissions",
+        "team-management",
+        "user-management",
+        "permission-management",
+        "audit-logging",
+        "rest-api",
+        "blade-directives",
+        "policies",
+        "middleware",
+        "caching",
+        "acl",
+        "access-control-list",
+        "tenancy",
+        "saas"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alberto Rial Barreiro",
+            "email": "alberto@squareet.com",
+            "homepage": "https://www.squareet.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Jacobo Cantorna Cigarrán",
+            "email": "jacobo@squareet.com",
+            "homepage": "https://www.squareet.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "ext-json": "*",
+        "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0",
+        "illuminate/http": "^8.0|^9.0|^10.0|^11.0|^12.0",
+        "illuminate/bus": "^8.0|^9.0|^10.0|^11.0|^12.0",
+        "illuminate/mail": "^8.0|^9.0|^10.0|^11.0|^12.0",
+        "illuminate/queue": "^8.0|^9.0|^10.0|^11.0|^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Squareetlabs\\LaravelTeamsPermissions\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\": "stubs/app/",
+            "Squareetlabs\\LaravelTeamsPermissions\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Squareetlabs\\LaravelTeamsPermissions\\TeamsServiceProvider"
+            ],
+            "aliases": {
+                "Teams": "Squareetlabs\\LaravelTeamsPermissions\\Support\\Facades\\Teams"
+            }
+        }
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0|^10.0",
+        "phpunit/phpunit": "^10.0|^11.0",
+        "pestphp/pest": "^2.0",
+        "pestphp/pest-plugin-laravel": "^2.0",
+        "mockery/mockery": "^1.6",
+        "phpstan/phpstan": "^1.10",
+        "larastan/larastan": "^2.0",
+        "laravel/pint": "^1.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
