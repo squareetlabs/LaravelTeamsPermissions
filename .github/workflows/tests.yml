@@ -9,50 +9,71 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+
     strategy:
+      fail-fast: false
       matrix:
         include:
+          # Laravel 8.x
           - php: 8.1
-            laravel: 10.*
-            testbench: ^9.0
-          - php: 8.2
-            laravel: 10.*
-            testbench: ^9.0
-          - php: 8.2
-            laravel: 11.*
-            testbench: ^10.0
-          - php: 8.3
-            laravel: 11.*
-            testbench: ^10.0
+            laravel: 8.x
+            testbench: ^6.0
+            phpunit: ^9.6
 
-    name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
+          # Laravel 9.x
+          - php: 8.1
+            laravel: 9.x
+            testbench: ^7.0
+            phpunit: ^9.6
+
+          # Laravel 10.x
+          - php: 8.2
+            laravel: 10.x
+            testbench: ^8.0
+            phpunit: ^10.5
+
+          # Laravel 11.x
+          - php: 8.3
+            laravel: 11.x
+            testbench: ^9.0
+            phpunit: ^10.5
+
+          # Laravel 12.x
+          - php: 8.3
+            laravel: 12.x
+            testbench: ^10.0
+            phpunit: ^11.0
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
           coverage: none
+          extensions: mbstring, intl, pdo_sqlite
+          tools: composer
 
-      - name: Setup problem matchers
-        run: |
-          echo "::add-matcher::${{ runner.tool_cache }}/php.json"
-          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+      - name: Validate composer.json
+        run: composer validate --strict
 
-      - name: Install dependencies
+      - name: Install dependencies (Laravel ${{ matrix.laravel }}, Testbench ${{ matrix.testbench }})
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
-          composer require "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-          composer update --prefer-dist --no-interaction
+          # Aseguramos versiones correctas de Testbench y PHPUnit para cada Laravel
+          composer require \
+            "orchestra/testbench:${{ matrix.testbench }}" \
+            "phpunit/phpunit:${{ matrix.phpunit }}" \
+            --no-update --dev
+
+          # Composer resolverá las versiones adecuadas de illuminate/* según Testbench
+          composer update --prefer-stable --no-interaction --no-progress
 
       - name: List Installed Dependencies
         run: composer show -D
 
-      - name: Execute tests
+      - name: Execute tests (Pest)
         run: vendor/bin/pest
 
       - name: Run PHPStan
@@ -62,4 +83,3 @@ jobs:
       - name: Run Pint
         run: vendor/bin/pint --test
         continue-on-error: true
-
