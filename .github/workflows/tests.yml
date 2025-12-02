@@ -14,35 +14,40 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Laravel 8.x
+          # Laravel 8.x - Usa Pest 1.x porque Pest 2.x requiere PHPUnit 10
           - php: 8.1
             laravel: 8.*
             testbench: "^6.0"
             phpunit: "^9.6"
+            pest: "^1.0"
 
-          # Laravel 9.x
+          # Laravel 9.x - Usa Pest 1.x porque Pest 2.x requiere PHPUnit 10
           - php: 8.1
             laravel: 9.*
             testbench: "^7.0"
             phpunit: "^9.6"
+            pest: "^1.0"
 
           # Laravel 10.x
           - php: 8.2
             laravel: 10.*
-            testbench: "^8.0"
+            testbench: "^9.0"
             phpunit: "^10.5"
+            pest: "^2.0"
 
           # Laravel 11.x
           - php: 8.3
             laravel: 11.*
             testbench: "^9.0"
             phpunit: "^10.5"
+            pest: "^2.0"
 
           # Laravel 12.x
           - php: 8.3
             laravel: 12.*
             testbench: "^10.0"
             phpunit: "^11.0"
+            pest: "^3.0"
 
     name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
 
@@ -75,6 +80,18 @@ jobs:
             "phpunit/phpunit:${{ matrix.phpunit }}" \
             --no-interaction --no-update --dev
 
+          # Fijar versión de Pest según la versión de Laravel
+          composer require \
+            "pestphp/pest:${{ matrix.pest }}" \
+            "pestphp/pest-plugin-laravel:${{ matrix.pest }}" \
+            --no-interaction --no-update --dev
+
+          # Para Laravel 12.x, usar Larastan 3.x en lugar de 2.x
+          if [[ "${{ matrix.laravel }}" == "12.*" ]]; then
+            composer remove larastan/larastan --no-interaction --no-update --dev 2>/dev/null || true
+            composer require "larastan/larastan:^3.0" --no-interaction --no-update --dev || true
+          fi
+
           # Actualizar dependencias
           composer update --prefer-stable --no-interaction --no-progress
 
@@ -85,7 +102,13 @@ jobs:
         run: vendor/bin/pest
 
       - name: Run PHPStan
-        run: vendor/bin/phpstan analyse --memory-limit=2G
+        run: |
+          # Solo ejecutar PHPStan si Larastan está disponible (no disponible para todas las versiones)
+          if composer show larastan/larastan > /dev/null 2>&1; then
+            vendor/bin/phpstan analyse --memory-limit=2G
+          else
+            echo "Larastan not available for this Laravel version, skipping PHPStan"
+          fi
         continue-on-error: true
 
       - name: Run Pint
