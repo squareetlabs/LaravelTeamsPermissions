@@ -78,7 +78,7 @@
         "pestphp/pest": "^1.0|^2.0|^3.0",
         "pestphp/pest-plugin-laravel": "^1.0|^2.0|^3.0",
         "mockery/mockery": "^1.6",
-        "phpstan/phpstan": "^1.10",
+        "phpstan/phpstan": "^1.10|^2.0",
         "larastan/larastan": "^2.0|^3.0",
         "laravel/pint": "^1.0"
     },
