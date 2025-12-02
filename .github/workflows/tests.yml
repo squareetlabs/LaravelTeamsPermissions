@@ -31,7 +31,7 @@ jobs:
           # Laravel 10.x
           - php: 8.2
             laravel: 10.*
-            testbench: "^9.0"
+            testbench: "^8.0"
             phpunit: "^10.5"
             pest: "^2.0"
 
@@ -86,10 +86,18 @@ jobs:
             "pestphp/pest-plugin-laravel:${{ matrix.pest }}" \
             --no-interaction --no-update --dev
 
-          # Para Laravel 12.x, usar Larastan 3.x en lugar de 2.x
-          if [[ "${{ matrix.laravel }}" == "12.*" ]]; then
+          # Remover Larastan para Laravel 8.x (no compatible)
+          if [[ "${{ matrix.laravel }}" == "8.*" ]]; then
             composer remove larastan/larastan --no-interaction --no-update --dev 2>/dev/null || true
-            composer require "larastan/larastan:^3.0" --no-interaction --no-update --dev || true
+          fi
+
+          # Para Laravel 12.x, usar Larastan 3.x y PHPStan 2.x
+          if [[ "${{ matrix.laravel }}" == "12.*" ]]; then
+            composer remove larastan/larastan phpstan/phpstan --no-interaction --no-update --dev 2>/dev/null || true
+            composer require \
+              "larastan/larastan:^3.0" \
+              "phpstan/phpstan:^2.0" \
+              --no-interaction --no-update --dev || true
           fi
 
           # Actualizar dependencias
