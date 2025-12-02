@@ -17,32 +17,32 @@ jobs:
           # Laravel 8.x
           - php: 8.1
             laravel: 8.*
-            testbench: ^6.0
-            phpunit: ^9.6
+            testbench: "^6.0"
+            phpunit: "^9.6"
 
           # Laravel 9.x
           - php: 8.1
             laravel: 9.*
-            testbench: ^7.0
-            phpunit: ^9.6
+            testbench: "^7.0"
+            phpunit: "^9.6"
 
           # Laravel 10.x
           - php: 8.2
             laravel: 10.*
-            testbench: ^9.0
-            phpunit: ^10.5
+            testbench: "^8.0"
+            phpunit: "^10.5"
 
           # Laravel 11.x
           - php: 8.3
             laravel: 11.*
-            testbench: ^9.0
-            phpunit: ^10.5
+            testbench: "^9.0"
+            phpunit: "^10.5"
 
           # Laravel 12.x
           - php: 8.3
             laravel: 12.*
-            testbench: ^10.0
-            phpunit: ^11.0
+            testbench: "^10.0"
+            phpunit: "^11.0"
 
     name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
 
@@ -61,18 +61,21 @@ jobs:
       - name: Validate composer.json
         run: composer validate --strict
 
+      - name: Configure Composer (disable insecure block for old Laravel)
+        run: composer config audit.block-insecure false
+
       - name: Install dependencies (Laravel ${{ matrix.laravel }}, Testbench ${{ matrix.testbench }})
         run: |
-          # Instalar Laravel framework primero
+          # Fijar versión de Laravel para cada job
           composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
-          
-          # Instalar Testbench y PHPUnit con versiones específicas
+
+          # Fijar versión de Testbench y PHPUnit para el job
           composer require \
             "orchestra/testbench:${{ matrix.testbench }}" \
             "phpunit/phpunit:${{ matrix.phpunit }}" \
             --no-interaction --no-update --dev
 
-          # Actualizar todas las dependencias
+          # Actualizar dependencias
           composer update --prefer-stable --no-interaction --no-progress
 
       - name: List Installed Dependencies
