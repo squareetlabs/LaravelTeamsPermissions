@@ -7,8 +7,10 @@ if (function_exists('pest')) {
     // Pest 2.x and 3.x syntax
     pest()
         ->extend(TestCase::class)
-        ->in(__DIR__);
+        ->in('tests/Unit')
+        ->in('tests/Feature');
 } else {
     // Pest 1.x syntax
-    uses(TestCase::class)->in(__DIR__);
+    uses(TestCase::class)->in('tests/Unit');
+    uses(TestCase::class)->in('tests/Feature');
 }

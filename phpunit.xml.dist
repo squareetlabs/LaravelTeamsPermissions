@@ -7,7 +7,6 @@
     colors="true"
     beStrictAboutChangesToGlobalState="false"
     beStrictAboutOutputDuringTests="false"
-    beStrictAboutTodoAnnotatedTests="false"
     failOnRisky="false"
     failOnWarning="false"
 >
@@ -27,13 +26,6 @@
             <directory>tests</directory>
         </testsuite>
     </testsuites>
-
-    <!-- Code Coverage -->
-    <coverage>
-        <include>
-            <directory suffix=".php">src</directory>
-        </include>
-    </coverage>
 
     <!-- Source locations (PHPUnit 10/11 syntax) -->
     <source>
