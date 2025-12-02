@@ -1,7 +1,6 @@
 # Squareetlabs/LaravelTeamsPermissions
 
 [![Latest Stable Version](https://poser.pugx.org/squareetlabs/laravel-teams-permissions/v/stable)](https://packagist.org/packages/squareetlabs/laravel-teams-permissions)
-[![Total Downloads](https://poser.pugx.org/squareetlabs/laravel-teams-permissions/downloads)](https://packagist.org/packages/squareetlabs/laravel-teams-permissions)
 [![PHP Version Require](https://poser.pugx.org/squareetlabs/laravel-teams-permissions/require/php)](https://packagist.org/packages/squareetlabs/laravel-teams-permissions)
 [![License](https://poser.pugx.org/squareetlabs/laravel-teams-permissions/license)](https://packagist.org/packages/squareetlabs/laravel-teams-permissions)
 
