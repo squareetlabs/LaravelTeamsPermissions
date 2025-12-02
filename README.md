@@ -5,7 +5,7 @@
 [![PHP Version Require](https://poser.pugx.org/squareetlabs/laravel-teams-permissions/require/php)](https://packagist.org/packages/squareetlabs/laravel-teams-permissions)
 [![License](https://poser.pugx.org/squareetlabs/laravel-teams-permissions/license)](https://packagist.org/packages/squareetlabs/laravel-teams-permissions)
 
-A comprehensive Laravel package designed for advanced team-based permission management in multi-tenant applications. This package provides a flexible and powerful system for organizing users into teams, assigning granular permissions through roles and groups, and managing entity-specific access controls.
+A comprehensive Laravel package designed for advanced team-based permission management in multi-tenant applications based on [![Jurager/Teams](https://github.com/Jurager/teams)]. This package provides a flexible and powerful system for organizing users into teams, assigning granular permissions through roles and groups, and managing entity-specific access controls.
 
 **Core Functionality:**
 
