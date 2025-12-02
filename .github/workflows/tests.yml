@@ -16,33 +16,35 @@ jobs:
         include:
           # Laravel 8.x
           - php: 8.1
-            laravel: 8.x
+            laravel: 8.*
             testbench: ^6.0
             phpunit: ^9.6
 
           # Laravel 9.x
           - php: 8.1
-            laravel: 9.x
+            laravel: 9.*
             testbench: ^7.0
             phpunit: ^9.6
 
           # Laravel 10.x
           - php: 8.2
-            laravel: 10.x
-            testbench: ^8.0
+            laravel: 10.*
+            testbench: ^9.0
             phpunit: ^10.5
 
           # Laravel 11.x
           - php: 8.3
-            laravel: 11.x
+            laravel: 11.*
             testbench: ^9.0
             phpunit: ^10.5
 
           # Laravel 12.x
           - php: 8.3
-            laravel: 12.x
+            laravel: 12.*
             testbench: ^10.0
             phpunit: ^11.0
+
+    name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
 
     steps:
       - name: Checkout code
@@ -61,13 +63,16 @@ jobs:
 
       - name: Install dependencies (Laravel ${{ matrix.laravel }}, Testbench ${{ matrix.testbench }})
         run: |
-          # Aseguramos versiones correctas de Testbench y PHPUnit para cada Laravel
+          # Instalar Laravel framework primero
+          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
+          
+          # Instalar Testbench y PHPUnit con versiones específicas
           composer require \
             "orchestra/testbench:${{ matrix.testbench }}" \
             "phpunit/phpunit:${{ matrix.phpunit }}" \
-            --no-update --dev
+            --no-interaction --no-update --dev
 
-          # Composer resolverá las versiones adecuadas de illuminate/* según Testbench
+          # Actualizar todas las dependencias
           composer update --prefer-stable --no-interaction --no-progress
 
       - name: List Installed Dependencies

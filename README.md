@@ -1047,6 +1047,4 @@ This package is open-sourced software licensed under the [MIT license](LICENSE.m
 For support, please open an issue on [GitHub](https://github.com/squareetlabs/laravel-teams-permissions/issues).
 
 ## Authors
-
-- **Yuri Gerassimov** - [jurager01@gmail.com](mailto:jurager01@gmail.com)
 - **Squareetlabs** - [contact@squareetlabs.com](mailto:contact@squareetlabs.com)
