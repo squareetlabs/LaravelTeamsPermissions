@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
-use Squareetlabs\LaravelTeamsPermissions\Exceptions\AuditTableMissingException;
 use Squareetlabs\LaravelTeamsPermissions\Support\Services\TeamsService;
 use Squareetlabs\LaravelTeamsPermissions\Middleware\Ability as AbilityMiddleware;
 use Squareetlabs\LaravelTeamsPermissions\Middleware\Permission as PermissionMiddleware;
@@ -42,7 +41,9 @@ class TeamsServiceProvider extends ServiceProvider
         $this->registerFacades();
         $this->registerMiddlewares();
         $this->registerBladeDirectives();
-        $this->validateAuditConfiguration();
+        // No validar audit durante el boot para evitar el bucle:
+        // - Si audit está habilitado pero la tabla no existe, las migraciones fallarían
+        // - La validación real se hace en AuditService cuando se intenta usar audit
 
         if (Config::get('teams.invitations.enabled') && Config::get('teams.invitations.routes.register')) {
             $this->registerRoutes();
@@ -200,41 +201,4 @@ class TeamsServiceProvider extends ServiceProvider
             });
     }
 
-    /**
-     * Validate audit configuration.
-     *
-     * @return void
-     * @throws AuditTableMissingException
-     */
-    protected function validateAuditConfiguration(): void
-    {
-        if (!Config::get('teams.audit.enabled')) {
-            return;
-        }
-
-        // No validar durante migraciones o instalación
-        // La validación real se hace en AuditService cuando se intenta usar
-        if ($this->app->runningInConsole()) {
-            $command = $this->app->runningUnitTests() ? null : ($_SERVER['argv'][1] ?? null);
-            
-            // Saltar validación durante migraciones
-            if (in_array($command, ['migrate', 'migrate:fresh', 'migrate:refresh', 'migrate:reset', 'migrate:rollback', 'migrate:status'])) {
-                return;
-            }
-        }
-
-        // Validar que la tabla existe si la auditoría está habilitada
-        try {
-            if (!Schema::hasTable('team_audit_logs')) {
-                throw new AuditTableMissingException();
-            }
-        } catch (\Exception $e) {
-            // Si hay un error de conexión a la BD, no validar aún
-            // (puede ser que la BD aún no esté configurada)
-            if (str_contains($e->getMessage(), 'Connection') || str_contains($e->getMessage(), 'SQLSTATE')) {
-                return;
-            }
-            throw $e;
-        }
-    }
 }
